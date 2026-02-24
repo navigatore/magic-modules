@@ -17,7 +17,7 @@ resource "google_kms_crypto_key" "example_key" {
 
 # Grant the KMS role to the service agent.
 resource "google_kms_crypto_key_iam_binding" "crypto_key_binding" {
-  provider = google-beta
+  provider      = google-beta
   crypto_key_id = google_kms_crypto_key.example_key.id
   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
 
@@ -28,8 +28,8 @@ resource "google_kms_crypto_key_iam_binding" "crypto_key_binding" {
 
 # Config with KMS key provided
 resource "google_dataform_config" "{{$.PrimaryResourceId}}" {
-  provider = google-beta
-  region   = "us-central1"
+  provider             = google-beta
+  region               = "us-central1"
   default_kms_key_name = google_kms_crypto_key.example_key.id
 
   # Ensure permissions are propagated before updating the config
