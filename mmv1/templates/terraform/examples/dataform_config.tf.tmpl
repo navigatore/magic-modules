@@ -27,7 +27,7 @@ resource "google_kms_crypto_key_iam_binding" "crypto_key_binding" {
 }
 
 # Config with KMS key provided
-resource "google_dataform_config" "{{$.PrimaryResourceId}}" {
+resource "google_dataform_config" "custom_key_provided" {
   provider             = google-beta
   region               = "us-central1"
   default_kms_key_name = google_kms_crypto_key.example_key.id
@@ -45,6 +45,6 @@ resource "google_dataform_config" "config_no_key" {
   # default_kms_key_name is intentionally not provided
 
   depends_on = [
-    google_kms_crypto_key_iam_binding.crypto_key_binding
+    google_dataform_config.custom_key_provided
   ]
 }
