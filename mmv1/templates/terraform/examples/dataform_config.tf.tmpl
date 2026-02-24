@@ -1,8 +1,3 @@
-# Use a data source to get the project number for the P4SA email
-data "google_project" "project" {
-  provider = google-beta
-}
-
 resource "google_kms_key_ring" "keyring" {
   provider = google-beta
   name     = "{{index $.Vars "key_ring_name"}}"
@@ -15,25 +10,9 @@ resource "google_kms_crypto_key" "example_key" {
   key_ring = google_kms_key_ring.keyring.id
 }
 
-# Grant the KMS role to the service agent.
-resource "google_kms_crypto_key_iam_binding" "crypto_key_binding" {
-  provider      = google-beta
-  crypto_key_id = google_kms_crypto_key.example_key.id
-  role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
-
-  members = [
-    "serviceAccount:service-${data.google_project.project.number}@gcp-sa-dataform.iam.gserviceaccount.com",
-  ]
-}
-
 # Config with KMS key provided
 resource "google_dataform_config" "{{$.PrimaryResourceId}}" {
   provider             = google-beta
   region               = "us-central1"
   default_kms_key_name = google_kms_crypto_key.example_key.id
-
-  # Ensure permissions are propagated before updating the config
-  depends_on = [
-    google_kms_crypto_key_iam_binding.crypto_key_binding
-  ]
 }
