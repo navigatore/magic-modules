@@ -3,14 +3,6 @@ data "google_project" "project" {
   provider = google-beta
 }
 
-# 1. Explicitly trigger the creation of the Dataform Service Agent.
-# This uses the Service Usage API (already functional) instead of Dataform.
-resource "google_project_service_identity" "dataform_sa" {
-  provider = google-beta
-  project  = data.google_project.project.project_id
-  service  = "dataform.googleapis.com"
-}
-
 resource "google_kms_key_ring" "keyring" {
   provider = google-beta
   name     = "{{index $.Vars "key_ring_name"}}"
@@ -32,9 +24,6 @@ resource "google_kms_crypto_key_iam_binding" "crypto_key_binding" {
   members = [
     "serviceAccount:service-${data.google_project.project.number}@gcp-sa-dataform.iam.gserviceaccount.com",
   ]
-
-  # Ensure the identity is created before applying the binding
-  depends_on = [google_project_service_identity.dataform_sa]
 }
 
 # 3. Create the Config resource using the default KMS key.
