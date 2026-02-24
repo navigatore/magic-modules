@@ -43,7 +43,7 @@ examples:
       key_ring_name: 'example-key-ring'
       crypto_key_name: 'example-crypto-key-name'
   - name: 'dataform_config_no_key'
-    primary_resource_id: 'config'
+    primary_resource_id: 'config_no_key'
     min_version: 'beta'
 parameters:
   - name: 'region'
