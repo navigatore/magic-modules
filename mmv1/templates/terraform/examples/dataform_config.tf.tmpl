@@ -15,7 +15,7 @@ resource "google_kms_crypto_key" "example_key" {
   key_ring = google_kms_key_ring.keyring.id
 }
 
-# 2. Grant the KMS role to the service agent.
+# Grant the KMS role to the service agent.
 resource "google_kms_crypto_key_iam_binding" "crypto_key_binding" {
   provider = google-beta
   crypto_key_id = google_kms_crypto_key.example_key.id
@@ -26,13 +26,24 @@ resource "google_kms_crypto_key_iam_binding" "crypto_key_binding" {
   ]
 }
 
-# 3. Create the Config resource using the default KMS key.
+# Config with KMS key provided
 resource "google_dataform_config" "{{$.PrimaryResourceId}}" {
   provider = google-beta
   region   = "us-central1"
   default_kms_key_name = google_kms_crypto_key.example_key.id
 
   # Ensure permissions are propagated before updating the config
+  depends_on = [
+    google_kms_crypto_key_iam_binding.crypto_key_binding
+  ]
+}
+
+# Config without KMS key
+resource "google_dataform_config" "config_no_key" {
+  provider = google-beta
+  region   = "us-central1"
+  # default_kms_key_name is intentionally not provided
+
   depends_on = [
     google_kms_crypto_key_iam_binding.crypto_key_binding
   ]
