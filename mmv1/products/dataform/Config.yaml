@@ -14,7 +14,7 @@
 ---
 name: 'Config'
 description: |-
-  A singleton resource represents a Dataform configuration for project location.
+  A singleton resource representing the default Dataform configuration for specified location.
 min_version: 'beta'
 references:
   guides:
@@ -36,7 +36,7 @@ timeouts:
   update_minutes: 20
   delete_minutes: 20
 examples:
-  - name: 'dataform_config'
+  - name: 'dataform_config_with_kms_key'
     primary_resource_id: 'config'
     min_version: 'beta'
     vars:
@@ -47,9 +47,9 @@ examples:
       org_id: 'ORG_ID'
       billing_account: 'BILLING_ACCT'
     external_providers: ["time"]
-#  - name: 'dataform_config_no_key'
-#    primary_resource_id: 'config_no_key'
-#    min_version: 'beta'
+ - name: 'dataform_config_without_kms_key'
+   primary_resource_id: 'config'
+   min_version: 'beta'
 parameters:
   - name: 'region'
     type: String
