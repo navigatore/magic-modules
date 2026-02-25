@@ -46,6 +46,7 @@ examples:
     test_env_vars:
       org_id: 'ORG_ID'
       billing_account: 'BILLING_ACCT'
+    external_providers: ["time"]
 #  - name: 'dataform_config_no_key'
 #    primary_resource_id: 'config_no_key'
 #    min_version: 'beta'
