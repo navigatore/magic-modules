@@ -1,6 +1,5 @@
 resource "google_project" "project" {
-  provider = google-beta
-
+  provider        = google-beta
   name            = "{{index $.Vars "project_name"}}"
   project_id      = "{{index $.Vars "project_name"}}"
   org_id          = "{{index $.TestEnvVars "org_id"}}"
@@ -8,12 +7,26 @@ resource "google_project" "project" {
   deletion_policy = "DELETE"
 }
 
-# Enable cloud key KMS API
+# Enable Cloud Key KMS API
 resource "google_project_service" "cloudkms_api" {
-   provider = google-beta
+  provider = google-beta
+  project  = google_project.project.project_id
+  service  = "cloudkms.googleapis.com"
+}
 
-  project = google_project.project.project_id
-  service = "cloudkms.googleapis.com"
+# Enable Dataform API
+resource "google_project_service" "dataform_api" {
+  provider           = google-beta
+  project            = google_project.project.project_id
+  service            = "dataform.googleapis.com"
+  disable_on_destroy = false
+}
+
+# Retrieve the Dataform service identity
+resource "google_project_service_identity" "dataform_sa" {
+  provider = google-beta
+  project  = google_project.project.project_id
+  service  = "dataform.googleapis.com"
 }
 
 resource "google_kms_key_ring" "keyring" {
@@ -30,9 +43,23 @@ resource "google_kms_crypto_key" "example_key" {
   key_ring = google_kms_key_ring.keyring.id
 }
 
+# Grant the Encrypter/Decrypter role to the Dataform service agent on the KMS key
+resource "google_kms_crypto_key_iam_member" "crypto_key_binding" {
+  provider      = google-beta
+  crypto_key_id = google_kms_crypto_key.example_key.id
+  role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+  member        = google_project_service_identity.dataform_sa.member
+}
+
 # Config with KMS key provided
 resource "google_dataform_config" "{{$.PrimaryResourceId}}" {
   provider             = google-beta
   region               = "us-central1"
   default_kms_key_name = google_kms_crypto_key.example_key.id
+
+  # Ensure IAM binding is created before the Dataform Config
+  depends_on = [
+    google_kms_crypto_key_iam_member.crypto_key_binding,
+    google_project_service.dataform_api
+  ]
 }
