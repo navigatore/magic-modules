@@ -56,6 +56,7 @@ resource "google_dataform_config" "{{$.PrimaryResourceId}}" {
   provider             = google-beta
   region               = "us-central1"
   default_kms_key_name = google_kms_crypto_key.example_key.id
+  project              = google_project.project.project_id
 
   # Ensure IAM binding is created before the Dataform Config
   depends_on = [
