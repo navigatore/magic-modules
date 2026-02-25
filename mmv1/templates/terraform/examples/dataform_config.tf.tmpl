@@ -8,11 +8,20 @@ resource "google_project" "project" {
   deletion_policy = "DELETE"
 }
 
+# Enable cloud key KMS API
+resource "google_project_service" "cloudkms_api" {
+   provider = google-beta
+
+  project = google_project.project.project_id
+  service = "cloudkms.googleapis.com"
+}
+
 resource "google_kms_key_ring" "keyring" {
   provider = google-beta
   project = google_project.project.project_id
   name     = "{{index $.Vars "key_ring_name"}}"
   location = "us-central1"
+  depends_on = [ google_project_service.cloudkms_api ]
 }
 
 resource "google_kms_crypto_key" "example_key" {
