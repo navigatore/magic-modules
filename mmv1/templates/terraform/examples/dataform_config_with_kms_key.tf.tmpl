@@ -12,6 +12,7 @@ resource "google_project_service" "cloudkms_api" {
   provider = google-beta
   project  = google_project.project.project_id
   service  = "cloudkms.googleapis.com"
+  disable_on_destroy = false
 }
 
 # Enable Dataform API
