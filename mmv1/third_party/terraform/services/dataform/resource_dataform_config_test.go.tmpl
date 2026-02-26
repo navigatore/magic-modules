@@ -32,7 +32,7 @@ var (
 	_ = googleapi.Error{}
 )
 
-{{- if ne $.TargetVersionName "ga" -}}
+{{ if ne $.TargetVersionName "ga" -}}
 func TestAccDataformConfig_update(t *testing.T) {
 	t.Parallel()
 
