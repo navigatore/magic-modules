@@ -1,4 +1,5 @@
 package dataform_test
+{{ if ne $.TargetVersionName "ga" }}
 import (
 	"fmt"
 	"log"
@@ -33,7 +34,6 @@ var (
 	_ = googleapi.Error{}
 )
 
-{{ if ne $.TargetVersionName "ga" -}}
 func TestAccDataformConfig_update(t *testing.T) {
 	t.Parallel()
 
