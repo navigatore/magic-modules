@@ -223,7 +223,7 @@ resource "google_kms_crypto_key" "example_key_2" {
 }
 
 # Grant the Encrypter/Decrypter role to the Dataform service agent on the KMS key
-resource "google_kms_crypto_key_iam_member" "crypto_key_binding" {
+resource "google_kms_crypto_key_iam_member" "crypto_key_1_binding" {
   provider      = google-beta
   crypto_key_id = google_kms_crypto_key.example_key_1.id
   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
@@ -231,7 +231,7 @@ resource "google_kms_crypto_key_iam_member" "crypto_key_binding" {
 }
 
 # Grant the Encrypter/Decrypter role to the Dataform service agent on the KMS key
-resource "google_kms_crypto_key_iam_member" "crypto_key_binding" {
+resource "google_kms_crypto_key_iam_member" "crypto_key_2_binding" {
   provider      = google-beta
   crypto_key_id = google_kms_crypto_key.example_key_2.id
   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
