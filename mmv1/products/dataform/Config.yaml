@@ -13,8 +13,9 @@
 
 ---
 name: 'Config'
-description: |-
-  A singleton resource representing the default Dataform configuration for specified location.
+description: >
+  Config is a singleton resource used to configure the default Dataform settings
+  for a specified location.
 min_version: 'beta'
 references:
   guides:
@@ -68,5 +69,6 @@ properties:
   - name: 'defaultKmsKeyName'
     type: String
     min_version: beta
-    description:
-      Optional. The customer managed KMS key that will be used as default for encryption of user data.
+    description: >
+      Optional. A reference to the customer-managed encryption key (CMEK) that
+      will be used by default to encrypt user data.
